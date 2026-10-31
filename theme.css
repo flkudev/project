@@ -1,0 +1,28 @@
+:root {
+  --default-mode: dark;
+
+  --color-primary: oklch(0.83 0.095 84);
+  --color-background: oklch(0.15 0.012 262);
+  --color-foreground: oklch(0.95 0.01 85);
+
+  --color-gold: oklch(0.83 0.095 84);
+  --color-stone: oklch(0.72 0.015 262);
+  --color-rule: oklch(0.3 0.012 262);
+
+  --font-display: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
+  --text-base: 16px;
+  --text-ratio: 1.618;
+
+  --spacing: 4px;
+  --radius: 0px;
+  --default-border-width: 1px;
+
+  --default-transition-duration: 480ms;
+  --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dark {
+  --color-background: oklch(0.15 0.012 262);
+  --color-foreground: oklch(0.95 0.01 85);
+}
