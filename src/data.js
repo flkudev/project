@@ -1,0 +1,58 @@
+export const watches = [
+  {
+    id: "meridian",
+    name: "Meridian 40",
+    ref: "VM-040-S",
+    price: "$12,400",
+    tagline: "The one you wear to everything.",
+    specs: [
+      ["Case", "Polished steel, 40 mm"],
+      ["Movement", "Calibre VM-12, automatic, 72 h reserve"],
+      ["Dial", "Matte black, sunburst rim"],
+      ["Water", "100 m"],
+    ],
+    caseHex: "#c4c8cf", bezelHex: "#c4c8cf", dialHex: "#0e0f12", markerHex: "#e9e6df", handHex: "#e9e6df", strapHex: "#1b1c1f",
+  },
+  {
+    id: "aurelle",
+    name: "Aurelle 36",
+    ref: "VM-036-G",
+    price: "$28,900",
+    tagline: "Quiet gold, loud craft.",
+    specs: [
+      ["Case", "18k yellow gold, 36 mm"],
+      ["Movement", "Calibre VM-09, hand-wound, 60 h reserve"],
+      ["Dial", "Champagne, guilloché"],
+      ["Water", "30 m"],
+    ],
+    caseHex: "#d9a94e", bezelHex: "#e3b962", dialHex: "#e9d6a4", markerHex: "#8a6a2c", handHex: "#8a6a2c", strapHex: "#3a2415",
+  },
+  {
+    id: "noctis",
+    name: "Noctis Diver 42",
+    ref: "VM-042-D",
+    price: "$18,750",
+    tagline: "Built for the deep and the dark.",
+    specs: [
+      ["Case", "Steel, 42 mm"],
+      ["Bezel", "Ceramic, unidirectional"],
+      ["Movement", "Calibre VM-14, automatic, 80 h reserve"],
+      ["Water", "300 m"],
+    ],
+    caseHex: "#aeb4bd", bezelHex: "#0b1226", dialHex: "#0a1733", markerHex: "#dfe7f5", handHex: "#dfe7f5", strapHex: "#0b1226",
+  },
+  {
+    id: "sable",
+    name: "Sable Chrono 41",
+    ref: "VM-041-R",
+    price: "$22,300",
+    tagline: "Warm rose, cool precision.",
+    specs: [
+      ["Case", "Rose gold, 41 mm"],
+      ["Dial", "Deep forest green, opaline"],
+      ["Movement", "Calibre VM-17, chronograph, 65 h reserve"],
+      ["Water", "50 m"],
+    ],
+    caseHex: "#d7a08a", bezelHex: "#d7a08a", dialHex: "#1d3a2b", markerHex: "#e8c9b8", handHex: "#e8c9b8", strapHex: "#2a1b16",
+  },
+];
