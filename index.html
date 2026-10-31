@@ -6,7 +6,7 @@
 <title>Verrucci Maison</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
     --bg: oklch(0.15 0.012 262);
@@ -19,27 +19,34 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: var(--bg); color: var(--fg); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .07;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
   a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-  .display { font-family: var(--display); font-weight: 400; }
   .caps { text-transform: uppercase; letter-spacing: 0.25em; font-size: 12px; }
   .gold { color: var(--gold); }
   .muted { color: var(--stone); }
+  .display { font-family: var(--display); font-weight: 400; }
 
   #scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
   #scene canvas { width: 100%; height: 100%; display: block; }
 
-  header { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 24px 64px; }
+  header { position: fixed; inset: 0 0 auto 0; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 24px 64px; border-bottom: 1px solid transparent; }
   .logo { font-family: var(--display); font-size: 22px; letter-spacing: 0.4em; }
   nav { display: flex; gap: 40px; }
   nav a { transition: color .4s; }
   nav a:hover, .bag:hover { color: var(--gold); }
 
   main { position: relative; z-index: 10; }
-  section { min-height: 100vh; display: flex; align-items: center; padding: 128px 64px; }
+  section { min-height: 100vh; display: flex; align-items: center; padding: 128px 64px; position: relative; }
   .hero { align-items: flex-end; padding-bottom: 96px; }
   .hero h1 { font-size: clamp(72px, 11vw, 168px); line-height: .88; margin-top: 24px; font-family: var(--display); font-weight: 400; }
   .hero p.lede { margin-top: 32px; max-width: 420px; font-size: 18px; line-height: 1.6; color: var(--stone); }
+  .coords { margin-top: 28px; font-size: 11px; letter-spacing: .3em; color: var(--stone); }
+  .cue { position: absolute; left: 64px; bottom: 40px; width: 1px; height: 72px; background: linear-gradient(var(--gold), transparent); animation: cue 2.4s infinite; }
+  @keyframes cue { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
   .btn { display: inline-block; padding: 14px 28px; font-size: 12px; letter-spacing: .25em; text-transform: uppercase; transition: opacity .3s, border-color .3s, color .3s; }
   .btn-primary { background: var(--gold); color: var(--bg); }
   .btn-primary:hover { opacity: .85; }
@@ -47,25 +54,32 @@
   .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
   .row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 40px; }
 
-  .panel { max-width: 560px; width: 100%; background: oklch(0.15 0.012 262 / .7); backdrop-filter: blur(6px); padding: 40px; }
+  .eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); }
+  .eyebrow i { width: 56px; height: 1px; background: var(--gold); }
+
+  .panel { max-width: 580px; width: 100%; background: oklch(0.15 0.012 262 / .72); backdrop-filter: blur(6px); padding: 44px; border: 1px solid var(--rule); }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
   .chip { border: 1px solid var(--rule); padding: 8px 16px; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--stone); transition: all .4s; }
   .chip:hover { color: var(--fg); }
   .chip.on { border-color: var(--gold); color: var(--gold); }
-  .name { font-family: var(--display); font-size: clamp(56px, 7vw, 88px); line-height: 1; margin-top: 40px; }
+  .name { font-family: var(--display); font-size: clamp(56px, 7vw, 88px); line-height: 1; margin-top: 40px; font-weight: 400; }
   .tagline { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--stone); margin-top: 16px; }
-  .priceline { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--rule); padding-top: 24px; margin-top: 24px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 32px; }
+  .stats div { background: var(--bg); padding: 18px 16px; }
+  .stats b { display: block; font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1; color: var(--gold); }
+  .stats span { display: block; margin-top: 8px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--stone); }
+  .priceline { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--rule); padding-top: 24px; margin-top: 28px; }
   .price { font-family: var(--display); font-size: 32px; }
-  dl { margin-top: 24px; display: grid; gap: 16px; font-size: 14px; }
-  dl > div { display: grid; grid-template-columns: 110px 1fr; gap: 16px; border-bottom: 1px solid var(--rule); padding-bottom: 12px; }
-  dt { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--stone); }
-  .actions { display: flex; align-items: center; gap: 24px; margin-top: 32px; }
+  dl { margin-top: 24px; display: grid; gap: 14px; font-size: 14px; }
+  dl > div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; border-bottom: 1px solid var(--rule); padding-bottom: 12px; }
+  dt { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--stone); padding-top: 2px; }
+  .actions { display: flex; align-items: center; gap: 24px; margin-top: 32px; flex-wrap: wrap; }
   #flash { color: var(--gold); font-size: 14px; transition: opacity .5s; opacity: 0; }
 
   .craft { display: grid; gap: 80px; max-width: 560px; }
   .craft h2 { font-family: var(--display); font-weight: 400; font-size: clamp(56px, 7vw, 88px); line-height: .95; }
   .step { display: grid; grid-template-columns: auto 1fr; gap: 32px; border-top: 1px solid var(--rule); padding-top: 32px; }
-  .step .num { font-family: var(--display); font-size: 48px; color: var(--gold); }
+  .step .num { font-family: var(--display); font-size: 48px; color: var(--gold); line-height: 1; }
   .step h3 { font-family: var(--display); font-weight: 400; font-size: 30px; }
   .step p { margin-top: 12px; line-height: 1.6; color: var(--stone); max-width: 420px; }
 
@@ -82,7 +96,9 @@
     nav { display: none; }
     section { padding: 112px 24px; }
     footer { padding: 48px 24px; }
+    .cue { left: 24px; }
     #scene { opacity: .2; }
+    .panel { padding: 28px; }
   }
 </style>
 <script type="importmap">
@@ -108,19 +124,21 @@
 <main id="top">
   <section class="hero">
     <div style="max-width: 680px">
-      <p class="caps gold reveal">Maison Verrucci · Est. 1891</p>
+      <div class="eyebrow reveal"><span>Maison Verrucci · Est. 1891</span><i></i></div>
       <h1 class="reveal">Time, <em class="gold">held</em><br />still.</h1>
       <p class="lede reveal">Four references, hand-finished in our Geneva atelier and built to outlast whoever buys them.</p>
+      <p class="coords reveal">46.2044° N · 6.1432° E</p>
       <div class="row reveal">
         <a href="#collection" class="btn btn-primary">View references</a>
         <a href="#craft" class="btn btn-ghost">The making</a>
       </div>
     </div>
+    <div class="cue"></div>
   </section>
 
   <section id="collection">
-    <div class="panel">
-      <p class="caps gold">The references</p>
+    <div class="panel reveal">
+      <div class="eyebrow"><span>The references</span><i></i></div>
       <div class="chips" id="chips"></div>
       <div id="detail"></div>
     </div>
@@ -128,6 +146,7 @@
 
   <section id="craft">
     <div class="craft">
+      <div class="eyebrow reveal"><span>The making</span><i></i></div>
       <h2 class="reveal">Made slowly, <em class="gold">on purpose</em>.</h2>
       <div class="step reveal"><span class="num">01</span><div><h3>Cut the plates</h3><p>Each bridge is cut from a single block of German-silver, then hand-chamfered until the light breaks clean.</p></div></div>
       <div class="step reveal"><span class="num">02</span><div><h3>Finish by hand</h3><p>Perlage, Côtes de Genève and polished screws, done by people who have done them ten thousand times.</p></div></div>
@@ -150,16 +169,20 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 const watches = [
   { name: "Meridian 40", ref: "VM-040-S", price: "$12,400", tagline: "The one you wear to everything.",
-    specs: [["Case", "Polished steel, 40 mm"], ["Movement", "Calibre VM-12, automatic, 72 h reserve"], ["Dial", "Matte black, sunburst rim"], ["Water", "100 m"]],
+    stats: [["40", "mm case"], ["11.2", "mm thick"], ["72", "h reserve"]],
+    specs: [["Case", "Polished steel, 40 mm"], ["Movement", "Calibre VM-12, automatic, 72 h reserve"], ["Dial", "Matte black, guilloché, sunburst rim"], ["Lugs", "20 mm, brushed"], ["Water", "100 m"]],
     caseHex: "#c4c8cf", bezelHex: "#c4c8cf", dialHex: "#0e0f12", markerHex: "#e9e6df", handHex: "#e9e6df", strapHex: "#1b1c1f" },
   { name: "Aurelle 36", ref: "VM-036-G", price: "$28,900", tagline: "Quiet gold, loud craft.",
-    specs: [["Case", "18k yellow gold, 36 mm"], ["Movement", "Calibre VM-09, hand-wound, 60 h reserve"], ["Dial", "Champagne, guilloché"], ["Water", "30 m"]],
+    stats: [["36", "mm case"], ["9.8", "mm thick"], ["60", "h reserve"]],
+    specs: [["Case", "18k yellow gold, 36 mm"], ["Movement", "Calibre VM-09, hand-wound, 60 h reserve"], ["Dial", "Champagne, guilloché"], ["Lugs", "18 mm, polished"], ["Water", "30 m"]],
     caseHex: "#d9a94e", bezelHex: "#e3b962", dialHex: "#e9d6a4", markerHex: "#8a6a2c", handHex: "#8a6a2c", strapHex: "#3a2415" },
   { name: "Noctis Diver 42", ref: "VM-042-D", price: "$18,750", tagline: "Built for the deep and the dark.",
-    specs: [["Case", "Steel, 42 mm"], ["Bezel", "Ceramic, unidirectional"], ["Movement", "Calibre VM-14, automatic, 80 h reserve"], ["Water", "300 m"]],
+    stats: [["42", "mm case"], ["13.4", "mm thick"], ["80", "h reserve"]],
+    specs: [["Case", "Steel, 42 mm"], ["Bezel", "Ceramic, unidirectional, 60 clicks"], ["Movement", "Calibre VM-14, automatic, 80 h reserve"], ["Lugs", "22 mm, brushed"], ["Water", "300 m"]],
     caseHex: "#aeb4bd", bezelHex: "#0b1226", dialHex: "#0a1733", markerHex: "#dfe7f5", handHex: "#dfe7f5", strapHex: "#0b1226" },
   { name: "Sable Chrono 41", ref: "VM-041-R", price: "$22,300", tagline: "Warm rose, cool precision.",
-    specs: [["Case", "Rose gold, 41 mm"], ["Dial", "Deep forest green, opaline"], ["Movement", "Calibre VM-17, chronograph, 65 h reserve"], ["Water", "50 m"]],
+    stats: [["41", "mm case"], ["11.6", "mm thick"], ["65", "h reserve"]],
+    specs: [["Case", "Rose gold, 41 mm"], ["Dial", "Deep forest green, opaline, two subdials"], ["Movement", "Calibre VM-17, chronograph, 65 h reserve"], ["Lugs", "20 mm, polished"], ["Water", "50 m"]],
     caseHex: "#d7a08a", bezelHex: "#d7a08a", dialHex: "#1d3a2b", markerHex: "#e8c9b8", handHex: "#e8c9b8", strapHex: "#2a1b16" },
 ];
 
@@ -169,7 +192,7 @@ const bag = [];
 /* ---------- 3D scene ---------- */
 const host = document.getElementById("scene");
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setPixelRatio(1);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 host.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
@@ -181,20 +204,49 @@ const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(3, 4, 5)
 const rim = new THREE.DirectionalLight(0xf3d9a0, 0.9); rim.position.set(-4, -2, -3); scene.add(rim);
 const pt = new THREE.PointLight(0xffffff, 0.6); pt.position.set(0, 0, 3); scene.add(pt);
 
-const mat = (opts) => new THREE.MeshPhysicalMaterial(opts);
+/* guilloché + sunburst dial texture (grayscale, tinted by colour) */
+function dialTexture() {
+  const c = document.createElement("canvas"); c.width = c.height = 1024;
+  const g = c.getContext("2d");
+  g.fillStyle = "#ffffff"; g.fillRect(0, 0, 1024, 1024);
+  g.strokeStyle = "rgba(0,0,0,0.06)"; g.lineWidth = 1;
+  for (let r = 14; r < 512; r += 5) { g.beginPath(); g.arc(512, 512, r, 0, Math.PI * 2); g.stroke(); }
+  g.strokeStyle = "rgba(0,0,0,0.035)";
+  for (let a = 0; a < 360; a += 1.2) {
+    const rad = (a * Math.PI) / 180;
+    g.beginPath(); g.moveTo(512, 512); g.lineTo(512 + Math.cos(rad) * 540, 512 + Math.sin(rad) * 540); g.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function dateTexture() {
+  const c = document.createElement("canvas"); c.width = 128; c.height = 64;
+  const g = c.getContext("2d");
+  g.fillStyle = "#0d0d0f"; g.fillRect(0, 0, 128, 64);
+  g.fillStyle = "#f2efe6"; g.font = "600 44px Inter, sans-serif";
+  g.textAlign = "center"; g.textBaseline = "middle";
+  g.fillText(String(new Date().getDate()), 64, 34);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 const M = {
-  case: mat({ metalness: 1, roughness: 0.2, clearcoat: 0.4, clearcoatRoughness: 0.1, side: THREE.DoubleSide }),
-  bezel: mat({ metalness: 0.9, roughness: 0.25, clearcoat: 0.6 }),
-  dial: new THREE.MeshStandardMaterial({ metalness: 0.15, roughness: 0.42 }),
+  case: new THREE.MeshPhysicalMaterial({ metalness: 1, roughness: 0.2, clearcoat: 0.4, clearcoatRoughness: 0.1, side: THREE.DoubleSide }),
+  bezel: new THREE.MeshPhysicalMaterial({ metalness: 0.9, roughness: 0.25, clearcoat: 0.6 }),
+  dial: new THREE.MeshStandardMaterial({ map: dialTexture(), metalness: 0.15, roughness: 0.42 }),
   marker: new THREE.MeshStandardMaterial({ metalness: 0.9, roughness: 0.3 }),
   hand: new THREE.MeshStandardMaterial({ metalness: 1, roughness: 0.22 }),
-  strap: mat({ roughness: 0.6, sheen: 0.4, sheenRoughness: 0.5 }),
+  lume: new THREE.MeshStandardMaterial({ color: 0xf2efe0, emissive: 0x7d9c62, emissiveIntensity: 0.35, roughness: 0.6 }),
+  strap: new THREE.MeshPhysicalMaterial({ roughness: 0.6, sheen: 0.4, sheenRoughness: 0.5 }),
   sec: new THREE.MeshStandardMaterial({ color: 0xc2322b, metalness: 0.2, roughness: 0.4 }),
-  glass: mat({ color: 0xffffff, transparent: true, opacity: 0.06, roughness: 0.02, metalness: 0, clearcoat: 1 }),
+  glass: new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.06, roughness: 0.02, metalness: 0, clearcoat: 1 }),
   window: new THREE.MeshStandardMaterial({ color: 0x050608, roughness: 0.8 }),
-  gold: mat({ color: 0xd9b06a, metalness: 1, roughness: 0.3 }),
+  gold: new THREE.MeshPhysicalMaterial({ color: 0xd9b06a, metalness: 1, roughness: 0.3 }),
 };
-const watch = new THREE.Group();
+
 const outer = new THREE.Group();
 const model = new THREE.Group();
 model.rotation.x = Math.PI / 2;
@@ -202,24 +254,58 @@ outer.add(model);
 scene.add(outer);
 
 const add = (geo, material, parent = model) => { const m = new THREE.Mesh(geo, material); parent.add(m); return m; };
-const profile = [[0, -0.2], [0.86, -0.2], [0.98, -0.16], [1.04, -0.08], [1.06, 0.06], [1.02, 0.14], [0, 0.14]].map(([x, y]) => new THREE.Vector2(x, y));
-add(new THREE.LatheGeometry(profile, 64), M.case);
-const bezel = add(new THREE.TorusGeometry(1.0, 0.06, 16, 96), M.bezel); bezel.rotation.x = Math.PI / 2; bezel.position.y = 0.14;
-const dial = add(new THREE.CircleGeometry(0.96, 128), M.dial); dial.rotation.x = -Math.PI / 2; dial.position.y = 0.125;
-const glass = add(new THREE.CircleGeometry(1.0, 128), M.glass); glass.rotation.x = -Math.PI / 2; glass.position.y = 0.2;
 
+/* case, bezel, dial, glass */
+const profile = [[0, -0.2], [0.86, -0.2], [0.98, -0.16], [1.04, -0.08], [1.06, 0.06], [1.02, 0.14], [0, 0.14]].map(([x, y]) => new THREE.Vector2(x, y));
+add(new THREE.LatheGeometry(profile, 96), M.case);
+const bezel = add(new THREE.TorusGeometry(1.0, 0.06, 20, 120), M.bezel); bezel.rotation.x = Math.PI / 2; bezel.position.y = 0.14;
+for (let i = 0; i < 60; i++) {
+  const a = (i * Math.PI) / 30;
+  const n = add(new THREE.BoxGeometry(0.03, 0.05, 0.07), M.case);
+  n.position.set(Math.sin(a) * 1.0, 0.2, -Math.cos(a) * 1.0); n.rotation.y = -a;
+}
+const dial = add(new THREE.CircleGeometry(0.96, 160), M.dial); dial.rotation.x = -Math.PI / 2; dial.position.y = 0.125;
+const glass = add(new THREE.CircleGeometry(1.0, 160), M.glass); glass.rotation.x = -Math.PI / 2; glass.position.y = 0.22;
+
+/* markers and minute track */
 for (let i = 0; i < 12; i++) {
   const a = (i * Math.PI) / 6, long = i % 3 === 0;
-  const m = add(new THREE.BoxGeometry(long ? 0.07 : 0.045, 0.02, long ? 0.2 : 0.12), M.marker);
+  const m = add(new THREE.BoxGeometry(long ? 0.075 : 0.045, 0.024, long ? 0.22 : 0.12), M.marker);
   m.position.set(Math.sin(a) * 0.8, 0.14, -Math.cos(a) * 0.8); m.rotation.y = -a;
+  if (long) {
+    const l = add(new THREE.BoxGeometry(0.05, 0.026, 0.14), M.lume);
+    l.position.set(Math.sin(a) * 0.8, 0.145, -Math.cos(a) * 0.8); l.rotation.y = -a;
+  }
 }
 for (let i = 0; i < 60; i++) {
   if (i % 5 === 0) continue;
   const a = (i * Math.PI) / 30;
   const m = add(new THREE.BoxGeometry(0.012, 0.01, 0.04), M.marker);
-  m.position.set(Math.sin(a) * 0.88, 0.135, -Math.cos(a) * 0.88); m.rotation.y = -a;
+  m.position.set(Math.sin(a) * 0.9, 0.135, -Math.cos(a) * 0.9); m.rotation.y = -a;
 }
 
+/* date window */
+const dateWin = add(new THREE.PlaneGeometry(0.16, 0.085), new THREE.MeshBasicMaterial({ map: dateTexture() }));
+dateWin.rotation.x = -Math.PI / 2; dateWin.position.set(0.7, 0.132, 0.02);
+
+/* subdials */
+const subHands = {};
+function subdial(x, z, key, mat) {
+  const g = new THREE.Group(); g.position.set(x, 0.131, z); model.add(g);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.007, 8, 80), M.marker); ring.rotation.x = Math.PI / 2; g.add(ring);
+  for (let i = 0; i < 12; i++) {
+    const a = (i * Math.PI) / 6;
+    const t = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.01, 0.05), M.marker);
+    t.position.set(Math.sin(a) * 0.145, 0.004, -Math.cos(a) * 0.145); t.rotation.y = -a; g.add(t);
+  }
+  const hp = new THREE.Group(); hp.position.y = 0.006; g.add(hp);
+  const h = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.006, 0.14).translate(0, 0, -0.07), mat); hp.add(h);
+  subHands[key] = hp;
+}
+subdial(-0.42, -0.12, "sub1", M.hand);
+subdial(0.42, -0.12, "sub2", M.sec);
+
+/* tourbillon window */
 const tourGroup = new THREE.Group(); tourGroup.position.set(0, 0.15, 0.45); model.add(tourGroup);
 const wnd = add(new THREE.CircleGeometry(0.2, 64), M.window, tourGroup); wnd.rotation.x = -Math.PI / 2; wnd.position.y = -0.005;
 const tourbillon = new THREE.Group(); tourGroup.add(tourbillon);
@@ -230,13 +316,17 @@ for (let i = 0; i < 3; i++) {
 }
 add(new THREE.SphereGeometry(0.03, 16, 16), M.gold, tourbillon).position.y = 0.02;
 
+/* hands with lume inserts */
 const pivot = (y) => { const g = new THREE.Group(); g.position.y = y; model.add(g); return g; };
 const hourPivot = pivot(0.16), minPivot = pivot(0.17), secPivot = pivot(0.18);
 add(new THREE.BoxGeometry(0.07, 0.02, 0.5).translate(0, 0, -0.25), M.hand, hourPivot);
+add(new THREE.BoxGeometry(0.03, 0.022, 0.32).translate(0, 0, -0.26), M.lume, hourPivot);
 add(new THREE.BoxGeometry(0.045, 0.02, 0.8).translate(0, 0, -0.4), M.hand, minPivot);
+add(new THREE.BoxGeometry(0.02, 0.022, 0.6).translate(0, 0, -0.36), M.lume, minPivot);
 add(new THREE.BoxGeometry(0.014, 0.025, 0.9).translate(0, 0, -0.32), M.sec, secPivot);
-const tip = add(new THREE.CylinderGeometry(0.04, 0.04, 0.02, 24), M.hand); tip.position.y = 0.19;
+add(new THREE.CylinderGeometry(0.04, 0.04, 0.03, 24), M.hand).position.y = 0.19;
 
+/* lugs, straps, crown */
 for (const [x, z] of [[0.5, -1], [-0.5, -1], [0.5, 1], [-0.5, 1]]) {
   const lug = add(new THREE.BoxGeometry(0.3, 0.12, 0.3), M.case); lug.position.set(x, -0.02, z);
 }
@@ -244,9 +334,16 @@ const strapCurve = (s) => new THREE.CatmullRomCurve3([
   new THREE.Vector3(0, 0, s * 1.2), new THREE.Vector3(0, 0.02, s * 1.9), new THREE.Vector3(0, -0.25, s * 2.6),
   new THREE.Vector3(0, -0.85, s * 2.95), new THREE.Vector3(0, -1.6, s * 2.75)]);
 for (const s of [1, -1]) {
-  const st = add(new THREE.TubeGeometry(strapCurve(s), 60, 0.13, 12), M.strap); st.scale.set(2.4, 1, 1);
+  const st = add(new THREE.TubeGeometry(strapCurve(s), 80, 0.13, 14), M.strap); st.scale.set(2.4, 1, 1);
 }
-const crown = add(new THREE.CylinderGeometry(0.07, 0.07, 0.2, 24).rotateZ(Math.PI / 2), M.case); crown.position.set(1.1, 0.02, 0);
+const crown = add(new THREE.CylinderGeometry(0.07, 0.07, 0.2, 32).rotateZ(Math.PI / 2), M.case); crown.position.set(1.1, 0.02, 0);
+const crownTop = add(new THREE.CylinderGeometry(0.075, 0.075, 0.03, 32).rotateZ(Math.PI / 2), M.gold); crownTop.position.set(1.2, 0.02, 0);
+for (let i = 0; i < 24; i++) {
+  const a = (i * Math.PI * 2) / 24;
+  const k = add(new THREE.BoxGeometry(0.18, 0.012, 0.012), M.case);
+  k.position.set(1.1, 0.02 + Math.cos(a) * 0.074, Math.sin(a) * 0.074);
+  k.rotation.x = a;
+}
 
 /* colour morph targets */
 const target = {};
@@ -273,7 +370,6 @@ function resize() {
 addEventListener("resize", resize); resize();
 
 const clock = new THREE.Clock();
-let lastSec = -1;
 function frame() {
   requestAnimationFrame(frame);
   const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
@@ -294,6 +390,8 @@ function frame() {
   secPivot.rotation.y = -(sec / 60) * Math.PI * 2;
   minPivot.rotation.y = -(min / 60) * Math.PI * 2;
   hourPivot.rotation.y = -(hr / 12) * Math.PI * 2;
+  subHands.sub1.rotation.y = -(min / 60) * Math.PI * 2;
+  subHands.sub2.rotation.y = -(sec / 60) * Math.PI * 2;
   tourbillon.rotation.y = t * 1.8;
 
   M.case.color.lerp(target.case, k); M.bezel.color.lerp(target.bezel, k); M.dial.color.lerp(target.dial, k);
@@ -306,7 +404,6 @@ frame();
 /* ---------- UI ---------- */
 const chips = document.getElementById("chips");
 const detail = document.getElementById("detail");
-const flashEl = document.getElementById("flash");
 const bagCount = document.getElementById("bagCount");
 
 watches.forEach((w, i) => {
@@ -326,6 +423,7 @@ function select(i) {
     <div class="fade">
       <h2 class="name">${w.name}</h2>
       <p class="tagline">${w.tagline}</p>
+      <div class="stats">${w.stats.map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join("")}</div>
       <div class="priceline"><span class="price">${w.price}</span><span class="caps muted">Ref. ${w.ref}</span></div>
       <dl>${w.specs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}</dl>
       <div class="actions">
